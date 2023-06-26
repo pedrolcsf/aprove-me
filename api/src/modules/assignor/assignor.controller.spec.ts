@@ -32,6 +32,13 @@ const createAssignor = {
   name: 'new name',
 };
 
+const updateAssignor = {
+  id: '6f5ea472-09ae-4f09-89be-187f6dd715ec',
+  document: 'updateddocument',
+  email: 'updateddocument@email.com',
+  phone: '223456789',
+  name: 'updated name',
+};
 describe('AssignorController', () => {
   let controller: AssignorController;
   let service: AssignorService;
@@ -127,6 +134,31 @@ describe('AssignorController', () => {
           },
         ],
       });
+    });
+
+    it(`should be able to update a assignor`, async () => {
+      jest
+        .spyOn(service, 'update')
+        .mockResolvedValue({ assignor: updateAssignor });
+
+      const result = await controller.updateAssignor(
+        updateAssignor.id,
+        updateAssignor,
+      );
+
+      console.log(result);
+
+      expect(result).toEqual({ assignor: updateAssignor });
+    });
+
+    it(`should be able to delete a assignor`, async () => {
+      jest.spyOn(service, 'delete').mockResolvedValue(updateAssignor);
+
+      const result = await controller.deleteAssignor(updateAssignor.id);
+
+      console.log(result);
+
+      expect(result).toEqual(updateAssignor);
     });
   });
 });
