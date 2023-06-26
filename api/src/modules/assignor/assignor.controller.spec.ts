@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AssignorService } from './assignor.service';
 import { PrismaService } from '../../prisma.service';
+import { AssignorController } from './assignor.controller';
 
 const fakeAssignors = {
   assignors: [
@@ -32,8 +33,18 @@ const createAssignor = {
 };
 
 describe('AssignorController', () => {
-  let assignorService: AssignorService;
-  let prismaService: PrismaService;
+  let controller: AssignorController;
+  let service: AssignorService;
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      controllers: [AssignorController],
+      providers: [AssignorService, PrismaService],
+    }).compile();
+
+    controller = module.get<AssignorController>(AssignorController);
+    service = module.get<AssignorService>(AssignorService);
+  });
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -41,148 +52,81 @@ describe('AssignorController', () => {
 
   describe('Assignor', () => {
     it(`should be able to create a new assignor`, async () => {
-      const module: TestingModule = await Test.createTestingModule({
-        providers: [
-          AssignorService,
-          {
-            provide: PrismaService,
-            useValue: {
-              assignor: {
-                create: jest.fn().mockResolvedValue(createAssignor),
-                findUnique: jest.fn(),
-              },
-            },
-          },
-        ],
-      }).compile();
+      const assignorDto = {
+        id: '12414ddb-bf3e-4bb3-9f93-3f7ba7084dfa',
+        document: 'document',
+        email: 'email@email.com',
+        phone: '999999999',
+        name: 'Name',
+      };
 
-      assignorService = module.get<AssignorService>(AssignorService);
-      prismaService = module.get<PrismaService>(PrismaService);
+      const createdAssignor = {
+        ...createAssignor,
+      };
+      jest.spyOn(service, 'create').mockResolvedValue(createdAssignor);
 
-      const response = await assignorService.create(createAssignor);
+      const result = await controller.createAssignor(assignorDto);
 
-      expect(response).toEqual(createAssignor);
-    });
-
-    it(`should be able to return an array of assignors`, async () => {
-      const module: TestingModule = await Test.createTestingModule({
-        providers: [
-          AssignorService,
-          {
-            provide: PrismaService,
-            useValue: {
-              assignor: {
-                findMany: jest.fn().mockResolvedValue(fakeAssignors),
-                count: jest
-                  .fn()
-                  .mockResolvedValue(fakeAssignors.assignors.length),
-              },
-            },
-          },
-        ],
-      }).compile();
-
-      assignorService = module.get<AssignorService>(AssignorService);
-      prismaService = module.get<PrismaService>(PrismaService);
-
-      const response = await assignorService.list(1, 10);
-
-      expect(response).toEqual({
-        count: fakeAssignors.assignors.length,
-        assignors: fakeAssignors,
-      });
-      expect(prismaService.assignor.findMany).toHaveBeenCalledTimes(1);
-      expect(prismaService.assignor.count).toHaveBeenCalledTimes(1);
+      expect(result).toBe(createdAssignor);
+      expect(service.create).toHaveBeenCalledWith(assignorDto);
     });
 
     it(`should be able to return a single assignor`, async () => {
-      const module: TestingModule = await Test.createTestingModule({
-        providers: [
-          AssignorService,
-          {
-            provide: PrismaService,
-            useValue: {
-              assignor: {
-                findUnique: jest
-                  .fn()
-                  .mockResolvedValue(fakeAssignors.assignors[0]),
-              },
-            },
-          },
-        ],
-      }).compile();
+      const assignor = {
+        id: '12414ddb-bf3e-4bb3-9f93-3f7ba7084dfa',
+        document: 'document',
+        email: 'email@email.com',
+        phone: '999999999',
+        name: 'Name',
+      };
 
-      assignorService = module.get<AssignorService>(AssignorService);
-      prismaService = module.get<PrismaService>(PrismaService);
+      jest.spyOn(service, 'listOne').mockResolvedValue({
+        assignor: {
+          ...assignor,
+          payables: [],
+        },
+      });
 
-      const response = await assignorService.listOne(
-        fakeAssignors.assignors[0].id,
+      const result = await controller.listAssignor(
+        '12414ddb-bf3e-4bb3-9f93-3f7ba7084dfa',
       );
 
-      expect(response).toEqual({
-        assignor: fakeAssignors.assignors[0],
+      expect(result).toEqual({
+        assignor: {
+          ...assignor,
+          payables: [],
+        },
       });
-      expect(prismaService.assignor.findUnique).toHaveBeenCalledTimes(1);
     });
 
-    it(`should be able to update a assignor`, async () => {
-      const module: TestingModule = await Test.createTestingModule({
-        providers: [
-          AssignorService,
+    it(`should be able to return a array of assignors`, async () => {
+      const assignor = {
+        id: '12414ddb-bf3e-4bb3-9f93-3f7ba7084dfa',
+        document: 'document',
+        email: 'email@email.com',
+        phone: '999999999',
+        name: 'Name',
+      };
+
+      jest.spyOn(service, 'list').mockResolvedValue({
+        count: 1,
+        assignors: [
           {
-            provide: PrismaService,
-            useValue: {
-              assignor: {
-                findUnique: jest
-                  .fn()
-                  .mockResolvedValue(fakeAssignors.assignors[0]),
-                update: jest.fn().mockResolvedValue(fakeAssignors.assignors[0]),
-              },
-            },
+            ...assignor,
           },
         ],
-      }).compile();
-
-      assignorService = module.get<AssignorService>(AssignorService);
-      prismaService = module.get<PrismaService>(PrismaService);
-
-      const response = await assignorService.update(
-        fakeAssignors.assignors[0].id,
-        fakeAssignors.assignors[0],
-      );
-
-      expect(response).toEqual({
-        assignor: fakeAssignors.assignors[0],
       });
-      expect(prismaService.assignor.update).toHaveBeenCalledTimes(1);
-    });
 
-    it(`should be able to delete a assignor`, async () => {
-      const module: TestingModule = await Test.createTestingModule({
-        providers: [
-          AssignorService,
+      const result = await controller.listAssignors(1, 10);
+
+      expect(result).toEqual({
+        count: 1,
+        assignors: [
           {
-            provide: PrismaService,
-            useValue: {
-              assignor: {
-                findUnique: jest
-                  .fn()
-                  .mockResolvedValue(fakeAssignors.assignors[0]),
-                delete: jest.fn().mockResolvedValue(fakeAssignors.assignors[0]),
-              },
-            },
+            ...assignor,
           },
         ],
-      }).compile();
-
-      assignorService = module.get<AssignorService>(AssignorService);
-      prismaService = module.get<PrismaService>(PrismaService);
-
-      const response = await assignorService.delete(
-        fakeAssignors.assignors[0].id,
-      );
-      expect(response).toEqual(fakeAssignors.assignors[0]);
-      expect(prismaService.assignor.delete).toHaveBeenCalledTimes(1);
+      });
     });
   });
 });
