@@ -30,26 +30,26 @@ API feita com [NestJS](https://github.com/nestjs/nest).
 ### Exemplo da estrutura um recebível:
 ```json
   {
-    id: "33f48f73-be98-487b-8558-5e72ca6df787",
-    valor: 80.0,
-    emissionDate: "2023-03-03T00:00:00.000Z",
-    assignorId: "6f5ea472-09ae-4f09-89be-187f6dd715ec"
+    "id": "33f48f73-be98-487b-8558-5e72ca6df787",
+    "valor": 80.0,
+    "emissionDate": "2023-03-03T00:00:00.000Z",
+    "assignorId": "6f5ea472-09ae-4f09-89be-187f6dd715ec"
   }
 ```
 
 ### Exemplo da estrutura um cedente:
 ```json
   {
-    id: "6f5ea472-09ae-4f09-89be-187f6dd715ec",
-    document:"12345678911",
-    email: "johndoe@email.com",
-    phone: "43999999999",
-    name: "John Doe",
-    playables: [
+    "id": "6f5ea472-09ae-4f09-89be-187f6dd715ec",
+    "document":"12345678911",
+    "email": "johndoe@email.com",
+    "phone": "43999999999",
+    "name": "John Doe",
+    "playables": [
       {
-        id: "33f48f73-be98-487b-8558-5e72ca6df787",
-        valor: 80.0,
-        emissionDate: "2023-03-03T00:00:00.000Z",
+        "id": "33f48f73-be98-487b-8558-5e72ca6df787",
+        "valor": 80.0,
+        "emissionDate": "2023-03-03T00:00:00.000Z",
       }
     ]
   }
@@ -72,16 +72,16 @@ $ npm run test
 ### Exemplo da estrutura um usuário:
 ```json
   {
-    id: "d767cb09-a4ef-4a30-8a2b-71ffba2963bb",
-    login:"aprovame",
-    password:"aprovame",
+    "id": "d767cb09-a4ef-4a30-8a2b-71ffba2963bb",
+    "login":"aprovame",
+    "password":"aprovame",
   }
 ```
 
 ### Exemplo da estrutura da autenticação:
 ```json
   {
-    access_token: "token",
+    "access_token": "token",
   }
 ```
 
@@ -132,6 +132,7 @@ $ docker compose up -d
 ```
 
 <hr>
+
 ## Installation
 
 ```bash
