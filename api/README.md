@@ -1,31 +1,137 @@
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
+  <a href="https://bankme.tech/" target="blank"><img src="../assets/logo-bankme.png" width="91" height="108" alt="Bankme." /></a>
 </p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+<h1 align="center">
+  Aprova-me
+</h1>
 
 ## Description
+Teste técnico para a seleção de novos desenvolvedores da Bankme.
+API feita com [NestJS](https://github.com/nestjs/nest).
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+<hr>
+<br>
+
+## Validação e Persistência
+
+### Rotas:
+
+| Método | Descrição
+|---|---|
+| `POST` - `/integrations/payable`  | Criação de um recebível. |
+| `POST` - `/integrations/assignor`  | Criação de um cedente. |
+| `GET` - `/integrations/payable`  | Listagem de todos os recebíveis. |
+| `GET` - `/integrations/assignor`  | Listagem de todos os cedentes. |
+| `GET` - `/integrations/payable/:id`  | Listagem de um recebível. |
+| `GET` - `/integrations/assignor/:id`  | Listagem de um cedente. |
+
+
+### Exemplo da estrutura um recebível:
+```json
+  {
+    id: "33f48f73-be98-487b-8558-5e72ca6df787",
+    valor: 80.0,
+    emissionDate: "2023-03-03T00:00:00.000Z",
+    assignorId: "6f5ea472-09ae-4f09-89be-187f6dd715ec"
+  }
+```
+
+### Exemplo da estrutura um cedente:
+```json
+  {
+    id: "6f5ea472-09ae-4f09-89be-187f6dd715ec",
+    document:"12345678911",
+    email: "johndoe@email.com",
+    phone: "43999999999",
+    name: "John Doe",
+    playables: [
+      {
+        id: "33f48f73-be98-487b-8558-5e72ca6df787",
+        valor: 80.0,
+        emissionDate: "2023-03-03T00:00:00.000Z",
+      }
+    ]
+  }
+```
+
+## Testes
+Inicie o script abaixo para rodar os testes unitários
+```bash
+$ npm run test
+```
+
+
+## Autenticação:
+
+| Método | Descrição
+|---|---|
+| `POST` - `/integrations/users`  |  Criação de um usuário. |
+| `POST` - `/integrations/auth`  | Autenticação JWT. |
+
+### Exemplo da estrutura um usuário:
+```json
+  {
+    id: "d767cb09-a4ef-4a30-8a2b-71ffba2963bb",
+    login:"aprovame",
+    password:"aprovame",
+  }
+```
+
+### Exemplo da estrutura da autenticação:
+```json
+  {
+    access_token: "token",
+  }
+```
+
+## Infra e Doc
+Criando uma imagem docker para a api.
+
+-  Dockerfile:
+```docker
+  FROM node:18
+
+  WORKDIR /usr/src/app
+
+  COPY package*.json ./
+
+  RUN npm install
+
+  COPY . .
+
+  EXPOSE 3000
+
+  RUN npm run build
+
+  CMD [ "node", "dist/main.js" ]
+```
+- docker-compose.yml
+```yml
+version: "3.7"
+
+services:
+  app:
+    build: .
+    container_name: aprovame
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/usr/src/app
+    network_mode: host
+networks:
+  network:
+    driver: bridge
+```
+
+### Para iniciar o container:
+
+```bash
+$ docker build --tag "aprovame-api" .
+$ docker compose up -d
+```
+
+<hr>
 ## Installation
 
 ```bash
@@ -45,29 +151,8 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
 ## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
+- Author - [Pedro Ferreira](https://www.linkedin.com/in/pedrolcsf/)
 ## License
 
 Nest is [MIT licensed](LICENSE).

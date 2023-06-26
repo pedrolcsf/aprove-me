@@ -1,0 +1,14 @@
+version: "3.7"
+
+services:
+  app:
+    build: .
+    container_name: aprovame
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/usr/src/app
+    network_mode: host
+networks:
+  network:
+    driver: bridge
