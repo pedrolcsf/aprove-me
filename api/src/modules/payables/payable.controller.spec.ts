@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PayableController } from './payable.controller';
 import { PayableService } from './payable.service';
-import { NotFoundException, BadRequestException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma.service';
 import { format } from 'date-fns';
 describe('PayableController', () => {

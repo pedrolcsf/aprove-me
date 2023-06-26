@@ -4,10 +4,7 @@ import {
   Get,
   Param,
   Post,
-  Request,
-  UseGuards,
   UsePipes,
-  Query,
   ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';

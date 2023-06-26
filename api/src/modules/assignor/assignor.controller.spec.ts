@@ -3,27 +3,6 @@ import { AssignorService } from './assignor.service';
 import { PrismaService } from '../../prisma.service';
 import { AssignorController } from './assignor.controller';
 
-const fakeAssignors = {
-  assignors: [
-    {
-      id: '12414ddb-bf3e-4bb3-9f93-3f7ba7084dfa',
-      document: 'document',
-      email: 'email@email.com',
-      phone: '999999999',
-      name: 'Name',
-      payables: [],
-    },
-    {
-      id: 'a295dfdf-a432-443d-9018-df9b93add7c4',
-      document: 'document2',
-      email: 'email2@email.com',
-      phone: '999999998',
-      name: 'Name 2',
-      payables: [],
-    },
-  ],
-};
-
 const createAssignor = {
   id: '6f5ea472-09ae-4f09-89be-187f6dd715ec',
   document: 'newdocument',
@@ -146,8 +125,6 @@ describe('AssignorController', () => {
         updateAssignor,
       );
 
-      console.log(result);
-
       expect(result).toEqual({ assignor: updateAssignor });
     });
 
@@ -155,8 +132,6 @@ describe('AssignorController', () => {
       jest.spyOn(service, 'delete').mockResolvedValue(updateAssignor);
 
       const result = await controller.deleteAssignor(updateAssignor.id);
-
-      console.log(result);
 
       expect(result).toEqual(updateAssignor);
     });

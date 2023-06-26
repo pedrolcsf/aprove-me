@@ -1,9 +1,5 @@
 import { Test } from '@nestjs/testing';
-import {
-  HttpException,
-  HttpStatus,
-  UnauthorizedException,
-} from '@nestjs/common';
+import {} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
 import { AuthService } from './services/auth.service';
@@ -12,7 +8,6 @@ import { PrismaService } from '../../prisma.service';
 describe('AuthController', () => {
   let authController: AuthController;
   let authService: AuthService;
-  let prismaService: PrismaService;
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -22,7 +17,6 @@ describe('AuthController', () => {
 
     authController = moduleRef.get<AuthController>(AuthController);
     authService = moduleRef.get<AuthService>(AuthService);
-    prismaService = moduleRef.get<PrismaService>(PrismaService);
   });
 
   describe('login', () => {
